@@ -50,3 +50,24 @@ void Tester::run() {
 		++num;
 	}
 }
+
+std::vector<std::string> string_split(std::string string, std::string delimiter)
+{
+    std::vector<std::string> result;
+    if (!string.empty()) {
+        int start = 0;
+        do {
+            int idx = string.find(delimiter, start);
+            if (idx == std::string::npos) {
+                break;
+            }
+ 
+            int length = idx - start;
+            result.push_back(string.substr(start, length));
+            start += (length + delimiter.size());
+        } while (true);
+        result.push_back(string.substr(start));
+    }
+ 
+    return result;
+}

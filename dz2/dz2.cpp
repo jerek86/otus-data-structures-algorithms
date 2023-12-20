@@ -102,7 +102,10 @@ bool test(std::string in, std::string out) {
 	long in_num = std::stoi(in);
 	long out_num = std::stol(out);
 
-	return LuckyTicketCounterDP{}.count_all_tickets(in_num) == out_num;
+	long calculation_result = LuckyTicketCounterDP{}.count_all_tickets(in_num);
+	std::cout << "in: " << in_num << ", result: " << out_num << ", expected value: " << out_num << std::endl;
+
+	return calculation_result == out_num;
 }
 
 

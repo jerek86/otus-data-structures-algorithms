@@ -18,3 +18,5 @@ private:
 	RunTest run_test_;
 	std::string test_dir_path_;
 };
+
+std::vector<std::string> string_split(std::string string, std::string delimiter);
