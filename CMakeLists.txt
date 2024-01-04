@@ -17,3 +17,5 @@ target_link_libraries(dz3_fibonacci tester)
 
 add_executable(dz3_prime dz3/prime.cpp)
 target_link_libraries(dz3_prime tester)
+
+add_executable(dz4 dz4/main.cpp)
