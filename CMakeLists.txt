@@ -22,3 +22,6 @@ add_executable(dz4 dz4/main.cpp)
 
 add_executable(dz5 dz5/chess.cpp)
 target_link_libraries(dz5 tester)
+
+add_executable(dz6 dz6/sort.cpp)
+
