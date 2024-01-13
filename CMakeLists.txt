@@ -26,3 +26,5 @@ target_link_libraries(dz5 tester)
 add_executable(dz6 dz6/sort.cpp)
 
 add_executable(dz7 dz7/sort.cpp)
+
+add_executable(dz8 dz8/sort.cpp)
