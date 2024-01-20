@@ -141,6 +141,27 @@ protected:
         comparisons_ = 0;
     }
 
+    int find_max() {
+        int max = array_[0];
+        for (size_t i = 1; i < array_.size(); ++i) {
+            if (array_[i] > max) {
+                max = array_[i];
+            }
+        }
+
+        return max;
+    }
+
+    bool is_sorted() {
+        for (int i = 1; i < array_.size(); ++i) {
+            if (array_[i] < array_[i-1]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     std::vector<int> array_;
 
     long assignments_;
@@ -163,14 +184,14 @@ static void test_once(SortBase&& sort, int count) {
 
     sort.init_sorted_array(count);
     start = high_resolution_clock::now();
-    // sort.sort();
+    sort.sort();
 	stop = high_resolution_clock::now();
 	duration = duration_cast<milliseconds>(stop - start);
     dump_result(sort, "sorted array", count, duration.count());
 
     sort.init_reversed_array(count);
     start = high_resolution_clock::now();
-    // sort.sort();
+    sort.sort();
 	stop = high_resolution_clock::now();
 	duration = duration_cast<milliseconds>(stop - start);
     dump_result(sort, "reversed array", count, duration.count());
@@ -184,7 +205,7 @@ static void test_once(SortBase&& sort, int count) {
 
     sort.init_only_numbers_array(count);
     start = high_resolution_clock::now();
-    // sort.sort();
+    sort.sort();
 	stop = high_resolution_clock::now();
 	duration = duration_cast<milliseconds>(stop - start);
     dump_result(sort, "only numbers array", count, duration.count());
