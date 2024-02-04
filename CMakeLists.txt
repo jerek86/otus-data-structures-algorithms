@@ -32,3 +32,5 @@ add_executable(dz8 dz8/sort.cpp)
 add_executable(dz9 dz9/sort.cpp)
 
 add_executable(dz10 dz10/tree.cpp)
+
+add_executable(dz12 dz12/hash_table.cpp)
