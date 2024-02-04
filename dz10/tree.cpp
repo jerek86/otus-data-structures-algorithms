@@ -212,33 +212,202 @@ private:
     const bool need_balance_;
 };
 
+
+template<class T> class Treap {
+public:
+    Treap() = default;
+    ~Treap() {
+        clear_node(root_);
+    }
+
+    void insert(T x) {
+        auto t = find(x);
+        if (t) {
+            t->x.emplace_back(x);
+        } else {
+            root_ = insert(root_, new Node(x));
+        }
+    }
+
+    bool search(T x) {
+        return find(x) != nullptr;
+    }
+
+    void remove(T x) {
+        root_ = erase(root_, x);
+    }
+
+    void dump() {
+        dump(root_);
+    }
+
+private:
+    struct Node {
+        std::vector<T> x;
+        int y;
+        Node* l;
+        Node* r;
+
+        Node(const T& value) : x(1, value), y(rand()), l(nullptr), r(nullptr) {}
+    };
+
+    struct Result {
+        Node* l;
+        Node* r;
+    };
+
+    Result split(Node* t, T x, Node* l, Node* r) {
+        if (!t) {
+            return Result{nullptr, nullptr};
+        } else if (t->x.front() <= x) {
+            Result result = split(t->r, x, t->r, r);
+            t->r = result.l;
+            return Result{t, result.r};
+        } else {
+            Result result = split (t->l, x, l, t->l);
+            t->l = result.r;
+            return Result{result.l, t};
+        }
+    }
+
+    Node* merge (Node* l, Node* r) {
+        if (!l || !r) {
+            return l ? l : r;
+        }
+
+        if (l->y > r->y) {
+            l->r = merge (l->r, r);
+            return l;
+        }
+
+        r->l = merge (l, r->l);
+        return r;
+    }
+
+    Node* find(T x) {
+        Node* node = root_;
+        while (node) {
+            if (x < node->x.front()) {
+                node = node->l;
+            } else if(x > node->x.front()) {
+                node = node->r;
+            } else {
+                return node;
+            }
+        }
+
+        return nullptr;
+    }
+
+    Node* insert(Node* t, Node* it) {
+        if (!t) {
+            return it;
+        } else if (it->y > t->y) {
+            Result result = split(t, it->x.front(), it->l, it->r);
+            it->l = result.l;
+            it->r = result.r;
+            return it;
+        }
+        
+        if (it->x.front() < t->x.front()) {
+            t->l = insert(t->l, it);
+            return t;    
+        }
+        
+        t->r = insert(t->r, it);
+        return t;    
+    }
+    
+    Node* erase(Node* t, int x) {
+        if (!t) {
+            return t;
+        }
+
+        if (t->x.front() == x) {
+            t->x.resize(t->x.size() - 1);
+            if (t->x.empty()) {
+                t = merge(t->l, t->r);
+            }
+            return t;
+        }
+
+        if (x < t->x.front()) {
+            t->l = erase(t->l, x);
+        } else {
+            t->r = erase(t->r, x);
+        }
+
+        return t;
+    }
+
+    void dump(Node* node, size_t offset = 0) {
+        std::cout << std::string(offset*2, ' ');
+        
+        if (!node) {
+            std::cout << "nullptr" << std::endl;
+            return;
+        }
+
+        std::cout << node->x.front() << ":" << node->x.size() << ", " << node->y << std::endl;
+        dump(node->l, offset + 1);
+        dump(node->r, offset + 1);
+    }
+
+    void clear_node(Node* node) {
+        if(node == nullptr)
+            return;
+        clear_node(node->l);
+        clear_node(node->r);
+        delete node;
+    }
+
+    Node* root_ = nullptr;
+};
+
 int main() {
     constexpr unsigned SEED = 12345;
     std::srand(SEED);
 
-    AVLThee<int> tree{false};
-    AVLThee<int> tree_second{false};
-
-    size_t N = 50000;
+    size_t N = 5000000;
     size_t search_count = N / 10;
+
+    std::vector<int> items_to_insert;
+    items_to_insert.reserve(N);
+    for (size_t i = 0; i < N; ++i) {
+        items_to_insert.emplace_back(std::rand() % N);
+    }
+
+    std::vector<int> items_to_search;
+    items_to_search.reserve(search_count);
+    for (size_t i = 0; i < search_count; ++i) {
+        items_to_search.emplace_back(std::rand() % N);
+    }
+
+    std::vector<int> items_to_remove;
+    items_to_remove.reserve(search_count);
+    for (size_t i = 0; i < search_count; ++i) {
+        items_to_remove.emplace_back(std::rand() % N);
+    }
+
+    // AVLThee<int> tree{true};
+    // AVLThee<int> tree_second{true};
+    Treap<int> tree;
+    Treap<int> tree_second;
 
     std::cout << "random inserted tree:" << std::endl;
 
     auto start = high_resolution_clock::now();
     for (size_t i = 0; i < N; ++i) {
-        int t = std::rand() % N;
-        // std::cout << t << " ";
-        tree.insert(t);
+        tree.insert(items_to_insert[i]);
     }
 	auto stop = high_resolution_clock::now();
 	auto duration = duration_cast<milliseconds>(stop - start);
 
-    // tree.dump();
     std::cout << "insert " << N << " elements in first tree for " << duration.count() << "ms" << std::endl;
 
     start = high_resolution_clock::now();
     for (size_t i = 0; i < search_count; ++i) {
-        tree.search(std::rand() % N);
+        tree.search(items_to_search[i]);
     }
 	stop = high_resolution_clock::now();
 	duration = duration_cast<milliseconds>(stop - start);
@@ -246,7 +415,7 @@ int main() {
 
     start = high_resolution_clock::now();
     for (size_t i = 0; i < search_count; ++i) {
-        tree.remove(std::rand() % N);
+        tree.remove(items_to_remove[i]);
     }
 	stop = high_resolution_clock::now();
 	duration = duration_cast<milliseconds>(stop - start);
@@ -270,7 +439,7 @@ int main() {
 
     start = high_resolution_clock::now();
     for (size_t i = 0; i < search_count; ++i) {
-        tree_second.search(std::rand() % N);
+        tree_second.search(items_to_search[i]);
     }
 	stop = high_resolution_clock::now();
 	duration = duration_cast<milliseconds>(stop - start);
@@ -278,7 +447,7 @@ int main() {
 
     start = high_resolution_clock::now();
     for (size_t i = 0; i < search_count; ++i) {
-        tree_second.remove(std::rand() % N);
+        tree_second.remove(items_to_remove[i]);
     }
 	stop = high_resolution_clock::now();
 	duration = duration_cast<milliseconds>(stop - start);
