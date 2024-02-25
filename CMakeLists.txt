@@ -37,4 +37,6 @@ add_executable(dz12 dz12/hash_table.cpp)
 
 add_executable(dz13 dz13/trie.cpp)
 
+add_executable(dz14 dz14/kosarayu.cpp)
+
 add_executable(dz15 dz15/demukron.cpp)
