@@ -40,3 +40,5 @@ add_executable(dz13 dz13/trie.cpp)
 add_executable(dz14 dz14/kosarayu.cpp)
 
 add_executable(dz15 dz15/demukron.cpp)
+
+add_executable(dz16 dz16/kraskal.cpp)
