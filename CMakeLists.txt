@@ -44,3 +44,5 @@ add_executable(dz15 dz15/demukron.cpp)
 add_executable(dz16 dz16/kraskal.cpp)
 
 add_executable(dz17 dz17/dijkstra.cpp)
+
+add_executable(dz18 dz18/substring_search.cpp)
