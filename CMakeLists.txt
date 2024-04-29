@@ -46,3 +46,5 @@ add_executable(dz16 dz16/kraskal.cpp)
 add_executable(dz17 dz17/dijkstra.cpp)
 
 add_executable(dz18 dz18/substring_search.cpp)
+
+add_executable(rle dz20/rle.cpp)
