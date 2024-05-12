@@ -48,3 +48,8 @@ add_executable(dz17 dz17/dijkstra.cpp)
 add_executable(dz18 dz18/substring_search.cpp)
 
 add_executable(rle dz20/rle.cpp)
+
+add_executable(one_two_pears dz21/one_two_pears.cpp)
+add_executable(digital_tree dz21/digital_tree.cpp)
+add_executable(5x8 dz21/5x8.cpp)
+add_executable(islands dz21/islands.cpp)
